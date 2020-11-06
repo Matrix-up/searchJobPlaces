@@ -5,8 +5,11 @@ from .Page import Page
 
 def index(request):
     if request.method == "POST":
-        context = {'search': request.POST.get('search')}
-        url = "https://www.pracuj.pl/praca/" + context['search'] + ";kw"
+        context = {
+            'search': request.POST.get('search'),
+            'place': request.POST.get('place'),
+        }
+        url = "https://www.pracuj.pl/praca/" + context['search'] + ";kw/" + context['place'] + ';wp'
         source = Page(url)
         soup = BeautifulSoup(source.html, 'html.parser')
 
