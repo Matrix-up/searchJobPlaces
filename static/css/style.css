@@ -1,0 +1,83 @@
+.search {
+    width: 850px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+h1 {
+    font-size: 70px;
+    font-family: "Bitstream Vera Sans Mono", Monaco, "Courier New", Courier, monospace;
+    text-align: center;
+}
+.search-name {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.search-place {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    font-family: "Times New Roman";
+    font-size: 20px;
+}
+
+.search-name-label {
+    width: 450px;
+    font-size: 40px;
+    font-family: "Courier New"
+}
+
+.search-button {
+    width: 100px;
+}
+
+input {
+    font-size: 20px;
+    text-align: center;
+}
+
+.results-form {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.results-form input[type=text] {
+    font-family: "Courier New";
+    font-size: 30px;
+}
+
+.results {
+    margin-top: 50px;
+}
+
+h2 {
+    text-align: center;
+}
+
+table {
+    margin: 5px auto;
+    border-collapse: collapse;
+}
+
+table td, table th {
+    padding: 10px;
+    border: black solid 2px;
+}
+
+table .site{
+    text-align: center;
+}
+
+.service-name {
+    font-size: 25px;
+}
+
+.red-text {
+    color: red;
+}

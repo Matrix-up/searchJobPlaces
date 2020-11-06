@@ -1,0 +1,16 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "*"
+requests-html = "*"
+pyqt5 = "*"
+pyqt5-stubs = "==5.14.2.2"
+pyqtwebengine = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"

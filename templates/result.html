@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Wyszukiwarka pracy</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+</head>
+<body>
+<div class="results">
+    <form method="post" class="results-form">
+        {% csrf_token %}
+        <input type="text" class="search-label" name="search" value="{{ search }}">
+        <button type="submit">Szukaj</button>
+    </form>
+    <h2>Wyniki wyszukiwania dla "{{ search }}"</h2>
+    <table>
+        <tr>
+            <th>Nazwa Stanowiska</th>
+            <th>Pracodawca</th>
+            <th>Lokalizacja</th>
+            <th>Rodzaj umowy</th>
+        </tr>
+        <tr class="site">
+            <th colspan="4" class="service-name">pracuj.pl</th>
+        </tr>
+        {% for name, link, employer, location, contract_type in jobsList %}
+        <tr>
+            <td><a href="{{ link }}" target="_blank">{{ name }}</a></td>
+            <td>{{ employer }}</td>
+            <td>{{ location }}</td>
+            <td>{{ contract_type | safe }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+</body>
+</html>
