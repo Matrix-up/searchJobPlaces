@@ -8,12 +8,25 @@
 </head>
 <body>
 <div class="results">
+<h1 class="title-in-results">WYSZUKIWARKA PRACY</h1>
     <form method="post" class="results-form">
         {% csrf_token %}
-        <input type="text" class="search-label" name="search" value="{{ search }}">
-        <button type="submit">Szukaj</button>
+        <div class="search-name">
+            <label>
+                <input type="text" name="search" value="{{ search }}">
+            </label>
+            <input type="submit" value="Szukaj">
+        </div>
+        <br>
+        <div class="search-place">
+            <label>
+                Miejsce:<br>
+                <input type="text" name="place">
+            </label>
+        </div>
     </form>
-    <h2>Wyniki wyszukiwania dla "{{ search }}"</h2>
+<br>
+<h2>Wyniki wyszukiwania dla "{{ search }}"</h2>
     <table>
         <tr>
             <th>Nazwa Stanowiska</th>
