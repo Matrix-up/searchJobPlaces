@@ -65,6 +65,22 @@
                 <td colspan="3" ><i>Brak Ofert</i></td>
             </tr>
         {% endif %}
+
+        <tr>
+            <th colspan="3" class="service-name">infopraca.pl</th>
+        </tr>
+        {% for name, link, employer, location in infoPraca_pl %}
+            <tr>
+                <td><a href="https://www.infopraca.pl{{ link }}" target="_blank">{{ name }}</a></td>
+                <td class="employer">{{ employer }}</td>
+                <td class="location">{{ location }}</td>
+            </tr>
+        {% endfor %}
+        {% if not infoPraca_pl %}
+            <tr class="site">
+                <td colspan="3" ><i>Brak Ofert</i></td>
+            </tr>
+        {% endif %}
     </table>
 </div>
 <script type="text/javascript">
