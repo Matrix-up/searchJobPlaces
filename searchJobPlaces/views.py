@@ -8,13 +8,14 @@ def index(request):
         return render(request, 'index.html')
 
     context = {
-        'search': request.POST.get('search'),
-        'place': request.POST.get('place'),
+        'question': request.POST.get('question'),
+        'location': request.POST.get('location'),
     }
 
     context = pracuj_pl(context)
     context = praca_pl(context)
     context = infoPraca_pl(context)
+    context = pl_indeed_com(context)
 
     return render(request, 'result.html', context)
 
@@ -30,7 +31,7 @@ def pracuj_pl(context):
     positions = True  # Value True is set for entrance to loop
 
     while positions:
-        url = "https://www.pracuj.pl/praca/" + context['search'] + ";kw/" + context['place'] + ';wp?rd=0&pn=' + \
+        url = "https://www.pracuj.pl/praca/" + context['question'] + ";kw/" + context['location'] + ';wp?rd=0&pn=' + \
               str(page)
         source = Page(url)
         soup = BeautifulSoup(source.html, 'html.parser')
@@ -69,15 +70,15 @@ def praca_pl(context):
     locations = []
     first_site = ""
 
-    search = context['search'].replace(", ", ",").replace(" ", ",")
-    place = removePolishLetters(context['place'])
+    question = context['question'].replace(", ", ",").replace(" ", ",")
+    place = removePolishLetters(context['location']).replace(" ", ",")
 
     page = 1
     while True:
         if page == 1:
-            url = 'https://www.praca.pl/s-' + search + ',' + place + '.html'
+            url = 'https://www.praca.pl/s-' + question + ',' + place + '.html'
         else:
-            url = 'https://www.praca.pl/s-' + search + ',' + place + '_' + str(page) + '.html'
+            url = 'https://www.praca.pl/s-' + question + ',' + place + '_' + str(page) + '.html'
         source = Page(url)
         soup = BeautifulSoup(source.html, 'html.parser')
         offers = soup.find('div', class_="listing--with-blocks")
@@ -115,15 +116,6 @@ def praca_pl(context):
     return context
 
 
-def removePolishLetters(text):
-    letters = 'ąćęłńóśźż'
-    ascii_replacements = 'acelnoszz'
-
-    translator = str.maketrans(letters, ascii_replacements)
-
-    return text.translate(translator)
-
-
 def infoPraca_pl(context):
     names = []
     links = []
@@ -135,9 +127,9 @@ def infoPraca_pl(context):
     positions = True  # Value True is set for entrance to loop
 
     while positions:
-        url = "https://www.infopraca.pl/praca?q=" + context['search'] + '&d=0&pg=' + str(page)
-        if context['place'] is not '':
-            url += "&lc=" + context['place']
+        url = "https://www.infopraca.pl/praca?q=" + context['question'] + '&d=0&pg=' + str(page)
+        if context['location'] is not '':
+            url += "&lc=" + context['location']
         source = Page(url)
         soup = BeautifulSoup(source.html, 'html.parser')
 
@@ -165,3 +157,58 @@ def infoPraca_pl(context):
         page += 1
     context['infoPraca_pl'] = list(zip(names, links, employers, locations))
     return context
+
+
+def pl_indeed_com(context):
+    names = []
+    links = []
+    employers = []
+    locations = []
+
+    page = 1
+
+    url = 'https://pl.indeed.com/praca?q=' + context['question'] + '&l=' + context['location'] + '&radius=0&filter=0'
+
+    while True:
+        source = Page(url)
+        soup = BeautifulSoup(source.html, 'html.parser')
+
+        positions = soup.find_all("div", class_="jobsearch-SerpJobCard unifiedRow row result clickcard")
+        for position in positions:
+            name = position.find('a', class_="jobtitle turnstileLink")
+            location = position.find('span', class_="location accessible-contrast-color-location")
+            employer = position.find('span', class_="company")
+
+            if location is None:
+                location = position.find('div', class_="location accessible-contrast-color-location")
+
+            if employer is None:
+                employers.append('<i>Brak danych</i>')
+            elif employer.find(text=True) == "\n":
+                employer = employer.find('a', class_="turnstileLink")
+                employers.append(employer.find(text=True))
+            else:
+                employers.append(employer.find(text=True))
+
+            names.append(name['title'])
+            links.append(name['href'])
+            locations.append(location.find(text=True))
+        page += 1
+        page_button = soup.find('a', attrs={'aria-label': str(page)})
+        if page_button is None:
+            break
+        url = 'https://pl.indeed.com' + page_button['href']
+    context['pl_indeed_com'] = list(zip(names, links, employers, locations))
+    return context
+
+
+def removePolishLetters(text):
+    letters = 'ąćęłńóśźż'
+    ascii_replacements = 'acelnoszz'
+
+    translator = str.maketrans(letters, ascii_replacements)
+
+    return text.translate(translator)
+
+
+

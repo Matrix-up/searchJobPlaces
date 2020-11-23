@@ -13,7 +13,7 @@
         <h1 class="title">WYSZUKIWARKA PRACY</h1>
         <div class="search-name">
             <label>
-                <input type="text" class="search-name-label" name="search">
+                <input type="text" class="search-name-label" name="question">
             </label>
             <input type="submit" class="search-button" value="Szukaj">
         </div>
@@ -21,7 +21,7 @@
         <div class="search-place">
             <label>
                 Miejsce:<br>
-                <input type="text" name="place">
+                <input type="text" name="location">
             </label>
         </div>
     </form>
@@ -29,7 +29,7 @@
 <script type="text/javascript">
     function isEmptyForm()
     {
-        if (document.getElementsByClassName("search-name-label")[0].value == "") {
+        if (document.getElementsByName("question")[0].value == "") {
             alert("Jeżeli mam ci pomóc znaleść pracę, to chcę chociaż wiedzieć czego szukasz!");
             return false;
         }
