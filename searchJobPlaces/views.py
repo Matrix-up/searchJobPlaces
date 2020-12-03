@@ -16,6 +16,7 @@ def index(request):
     context = praca_pl(context)
     context = infoPraca_pl(context)
     context = pl_indeed_com(context)
+    context = nuzle_pl(context)
 
     return render(request, 'result.html', context)
 
@@ -71,7 +72,7 @@ def praca_pl(context):
     first_site = ""
 
     question = context['question'].replace(", ", ",").replace(" ", ",")
-    place = removePolishLetters(context['location']).replace(" ", ",")
+    place = remove_polish_letters(context['location']).replace(" ", ",")
 
     page = 1
     while True:
@@ -128,7 +129,7 @@ def infoPraca_pl(context):
 
     while positions:
         url = "https://www.infopraca.pl/praca?q=" + context['question'] + '&d=0&pg=' + str(page)
-        if context['location'] is not '':
+        if context['location'] != '':
             url += "&lc=" + context['location']
         source = Page(url)
         soup = BeautifulSoup(source.html, 'html.parser')
@@ -202,13 +203,56 @@ def pl_indeed_com(context):
     return context
 
 
-def removePolishLetters(text):
+def nuzle_pl(context):
+    names = []
+    links = []
+    employers = []
+    locations = []
+
+    page = 1
+
+    question = context['question'].replace(" ", "+")
+    place = remove_polish_letters(context['location'])
+    if place == '':
+        place = 'search'
+
+    url = 'https://www.nuzle.pl/' + place + '.html?co=' + question
+
+    while True:
+        source = Page(url)
+        soup = BeautifulSoup(source.html, 'html.parser')
+
+        positions = soup.find_all("div", class_="hash externalblanklist list-all-offer")
+        for position in positions:
+            name = position.find('a', class_="externalpup")
+            location = position.find('span', attrs={'itemprop': 'addressRegion'})
+            employer = position.find('span', attrs={'itemprop': 'hiringOrganization'})
+
+            names.append(name.find(text=True))
+            links.append(name['href'])
+            if location is None:
+                locations.append("<i>Brak Danych</i>")
+            else:
+                locations.append(location.find(text=True))
+
+            if employer is None:
+                employers.append("<i>Brak Danych</i>")
+            else:
+                employers.append(employer.find(text=True))
+
+        page += 1
+        page_button = soup.find('a', class_="number button", text=str(page))
+        if page_button is None:
+            break
+        url = 'https:' + page_button['href']
+    context['nuzle_pl'] = list(zip(names, links, employers, locations))
+    return context
+
+
+def remove_polish_letters(text):
     letters = 'ąćęłńóśźż'
     ascii_replacements = 'acelnoszz'
 
     translator = str.maketrans(letters, ascii_replacements)
 
     return text.translate(translator)
-
-
-

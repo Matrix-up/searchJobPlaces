@@ -97,13 +97,29 @@
                 <td colspan="3" ><i>Brak Ofert</i></td>
             </tr>
         {% endif %}
+
+        <tr>
+            <th colspan="3" class="service-name">nuzle.pl</th>
+        </tr>
+        {% for name, link, employer, location in nuzle_pl %}
+            <tr>
+                <td><a href="{{ link }}" target="_blank">{{ name }}</a></td>
+                <td class="employer">{{ employer | safe }}</td>
+                <td class="location">{{ location }}</td>
+            </tr>
+        {% endfor %}
+        {% if not nuzle_pl %}
+            <tr class="site">
+                <td colspan="3" ><i>Brak Ofert</i></td>
+            </tr>
+        {% endif %}
     </table>
 </div>
 <script type="text/javascript">
 
     function isEmptyForm()
     {
-        if (document.getElementsByName("question")[0].value == "") {
+        if (document.getElementsByName("question")[0].value === "") {
             alert("Jeżeli mam ci pomóc znaleść pracę, to chcę chociaż wiedzieć czego szukasz!");
             return false;
         }
