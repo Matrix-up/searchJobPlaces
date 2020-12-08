@@ -105,7 +105,7 @@
             <tr>
                 <td><a href="{{ link }}" target="_blank">{{ name }}</a></td>
                 <td class="employer">{{ employer | safe }}</td>
-                <td class="location">{{ location }}</td>
+                <td class="location">{{ location | safe }}</td>
             </tr>
         {% endfor %}
         {% if not nuzle_pl %}
